@@ -161,26 +161,27 @@ def generate_text_simple(model,idx,max_new_tokens,context_size):
        return idx
 
 
+if __name__ == "__main__":
 #testing the function
-torch.manual_seed(123)
+    torch.manual_seed(123)
 
-model=GPT_Model(GPT_Config_124M)
-start_context="1+2"
-encoded=tokenizer.encode(start_context) # already defined tiktoken gpt2
-print("encoded: ",encoded)
-# need to add batch dimension
-encoded_tensor=torch.tensor(encoded).unsqueeze(0)
+    model=GPT_Model(GPT_Config_124M)
+    start_context="1+2"
+    encoded=tokenizer.encode(start_context) # already defined tiktoken gpt2
+    print("encoded: ",encoded)
+    # need to add batch dimension
+    encoded_tensor=torch.tensor(encoded).unsqueeze(0)
 
-print("encoded tensor: ",encoded_tensor, "Shape: ",encoded_tensor.shape)
+    print("encoded tensor: ",encoded_tensor, "Shape: ",encoded_tensor.shape)
 
-# now we will call the model but first put it into eval() mode to disable dropout etc which are only needed
-# during training
+    # now we will call the model but first put it into eval() mode to disable dropout etc which are only needed
+    # during training
 
-model.eval()
-output=generate_text_simple(model=model,idx=encoded_tensor,max_new_tokens=6,
+    model.eval()
+    output=generate_text_simple(model=model,idx=encoded_tensor,max_new_tokens=6,
                             context_size=GPT_Config_124M["context_length"])
 
-print("Output: ", output) # the model has generated token ids, we need to convert using decode
-print("Output_length: ", len(output[0]) )
-decoded_text=tokenizer.decode(output.squeeze(0).tolist())
-print(decoded_text) # first ever output text
+    print("Output: ", output) # the model has generated token ids, we need to convert using decode
+    print("Output_length: ", len(output[0]) )
+    decoded_text=tokenizer.decode(output.squeeze(0).tolist())
+    print(decoded_text) # first ever output text
